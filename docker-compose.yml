@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html  # Mapping 'src' directory for better separation (you can adjust this as needed)
+    environment:
+      - DB_HOST=db
+      - DB_NAME=revive_adserver
+      - DB_USER=revive_user
+      - DB_PASSWORD=revive_password
+      - BASE_URL=http://localhost:8080  # Add this environment variable
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: revive_adserver
+      MYSQL_USER: revive_user
+      MYSQL_PASSWORD: revive_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+
